@@ -1,10 +1,6 @@
-# -----------------------------------------------------------------------------------------
-# AER850 PROJECT - DCNN MODEL IMPLEMENTATION
-# Complete Workflow: From Dataset Extraction to Model Testing
-# -----------------------------------------------------------------------------------------
+# AER850 PROJECT 2 - DCNN MODEL IMPLEMENTATION
 
-# STEP 2.0 - IMPORT NECESSARY LIBRARIES
-# -----------------------------------------------------------------------------------------
+# Step 2.0 - importing the libraries 
 
 import os
 import zipfile
@@ -20,9 +16,7 @@ import matplotlib.pyplot as plt
 print(f"\nTensorFlow Version: {tf.__version__}")
 print(f"Keras Version: {keras.__version__}\n")
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.1 - DATA EXTRACTION AND PROCESSING
-# -----------------------------------------------------------------------------------------
+# Sstep 2.1 - DATA EXTRACTION AND PROCESSING
 
 # Define file paths
 zip_path = "DataSet.zip"
@@ -32,9 +26,9 @@ extract_dir = "Data" # Corrected directory name
 if not os.path.exists(extract_dir):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall("Data") # Extract to 'Data' directory
-    print(f"✅ Dataset extracted successfully to: {extract_dir}")
+    print(f" Dataset extracted successfully to: {extract_dir}")
 else:
-    print(f"⚠️ Dataset already exists at: {extract_dir}")
+    print(f" Dataset already exists at: {extract_dir}")
 
 # Confirm folder structure
 for root, dirs, files in os.walk(extract_dir):
@@ -80,9 +74,9 @@ print("\nTrain Samples:", train_generator.samples)
 print("Validation Samples:", validation_generator.samples)
 print("Class Indices:", train_generator.class_indices)
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.1b - VISUALIZE SAMPLE IMAGES
-# -----------------------------------------------------------------------------------------
+
+# step 2.1b - VISUALIZE SAMPLE IMAGES
+
 
 images, labels = next(train_generator)
 class_names = list(train_generator.class_indices.keys())
@@ -96,9 +90,9 @@ for i in range(9):
 plt.suptitle("Sample Training Images")
 plt.show()
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.2 - NEURAL NETWORK ARCHITECTURE DESIGN
-# -----------------------------------------------------------------------------------------
+
+# step 2.2 - NEURAL NETWORK ARCHITECTURE DESIGN
+
 
 dcnn_model = models.Sequential([
     layers.Input(shape=img_shape),
@@ -138,9 +132,7 @@ dcnn_model.compile(optimizer='adam',
 
 dcnn_model.summary()
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.4 - MODEL TRAINING
-# -----------------------------------------------------------------------------------------
+# step 2.4 - MODEL TRAINING
 
 training_history = dcnn_model.fit(
     train_generator,
@@ -148,9 +140,9 @@ training_history = dcnn_model.fit(
     validation_data=validation_generator
 )
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.5 - MODEL EVALUATION
-# -----------------------------------------------------------------------------------------
+
+# step 2.5 - MODEL EVALUATION
+
 
 val_loss, val_accuracy = dcnn_model.evaluate(validation_generator)
 print(f"\nFinal Validation Accuracy: {val_accuracy:.4f}")
@@ -161,9 +153,8 @@ train_accuracy = training_history.history['accuracy'][-1]
 print(f"Final Training Accuracy: {train_accuracy:.4f}")
 print(f"Final Training Loss: {train_loss:.4f}")
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.6 - VISUALIZE TRAINING RESULTS
-# -----------------------------------------------------------------------------------------
+
+# step 2.6 - VISUALIZE TRAINING RESULTS
 
 plt.figure(figsize=(12, 4))
 plt.plot(training_history.history['accuracy'], label="Training Accuracy")
@@ -185,11 +176,10 @@ plt.show()
 
 # Save model for Step 2.7
 dcnn_model.save("Aircraft_DCNN_Model.keras")
-print("\n✅ Model saved as 'Aircraft_DCNN_Model.keras'")
+print("\n Model saved as 'Aircraft_DCNN_Model.keras'")
 
-# -----------------------------------------------------------------------------------------
-# STEP 2.7 - MODEL TESTING
-# -----------------------------------------------------------------------------------------
+# step 2.7 - MODEL TESTING
+
 
 from tensorflow.keras.models import load_model
 
@@ -234,9 +224,7 @@ class ModelTester:
         predictions = self.make_prediction(img_array)
         self.plot_results(image_path, predictions, true_label)
 
-# -----------------------------------------------------------------------------------------
 # TESTING SAMPLE IMAGES
-# -----------------------------------------------------------------------------------------
 
 test_images = [
     ("Data/test/crack/test_crack.jpg", "Crack"), # Corrected directory name
@@ -248,7 +236,3 @@ tester = ModelTester("Aircraft_DCNN_Model.keras")
 
 for image_path, true_label in test_images:
     tester.test_image(image_path, true_label)
-
-# -----------------------------------------------------------------------------------------
-# END OF CODE
-# -----------------------------------------------------------------------------------------
